@@ -1,3 +1,4 @@
+using Siemens.Internship2026.GradeBook.DTOs;
 using Siemens.Internship2026.GradeBook.Interfaces;
 using Siemens.Internship2026.GradeBook.Models;
 
@@ -5,18 +6,26 @@ namespace Siemens.Internship2026.GradeBook.Repositories;
 
 public class GradeRepository : IGradeReader
 {
-    protected readonly List<Grade> _items = new();
-    protected int _nextId = 1;
+    private readonly HttpClient _httpClient;
 
-    public virtual Task<Grade?> GetByIdAsync(int id)
+    public GradeRepository(HttpClient httpClient)
     {
-        var item = _items.FirstOrDefault(i => i.Id == id && i.IsActive);
-        return Task.FromResult(item);
+        _httpClient = httpClient;
+    }
+    private async Task<List<Grade>> FetchGradesAsync()
+    {
+        var response = await _httpClient.GetFromJsonAsync<GradeResponse>("https://gist.githubusercontent.com/ArdeleanTudor/8ea407832cd9794960e0e6bbd1319f6e/raw/.");
+        return response?.Items ?? new List<Grade>();
+    }
+    public async Task<Grade?> GetByIdAsync(int id)
+    {
+        var response = await FetchGradesAsync();
+        return response.Where(g => g.IsActive).FirstOrDefault(g => g.Id == id);
     }
 
-    public virtual Task<IEnumerable<Grade>> GetAllAsync()
+    public async Task<IEnumerable<Grade>> GetAllAsync()
     {
-        var items = _items.Where(i => i.IsActive).AsEnumerable();
-        return Task.FromResult(items);
+        var response = await FetchGradesAsync();
+        return response.Where(g => g.IsActive);
     }
 }

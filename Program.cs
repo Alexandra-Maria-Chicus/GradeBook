@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IGradeService,GradeService>();
 builder.Services.AddScoped<IGradeReader, GradeRepository>();
+builder.Services.AddHttpClient<GradeRepository>();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
