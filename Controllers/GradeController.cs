@@ -7,42 +7,25 @@ namespace Siemens.Internship2026.GradeBook.Controllers;
 [Route("api/[controller]")]
 public class GradeController : ControllerBase
 {
-    private readonly IGradeReader _reader;
+    private readonly IGradeService _gradeService;
 
-    public GradeController(IGradeReader reader)
+    public GradeController(IGradeService gradeService)
     {
-        _reader = reader;
+        _gradeService = gradeService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/item called");
-
-        var items = await _reader.GetAllAsync();
-        var itemList = items.ToList();
-
-        var totalCount = itemList.Count;
-        var averageValue = itemList.Any() ? itemList.Average(i => i.Value) : 0;
-
-        Console.WriteLine($"[LOG] Returning {totalCount} items, average value: {averageValue}");
-
-        return Ok(new
-        {
-            Data = itemList,
-            Statistics = new
-            {
-                TotalCount = totalCount,
-                AverageValue = averageValue,
-                RetrievedAt = DateTime.UtcNow
-            }
-        });
+        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/grade called");
+        var grades = await _gradeService.GetAll();
+        return Ok(grades);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/item/{id} called");
+        Console.WriteLine($"[LOG] {DateTime.UtcNow}: GET api/grade/{id} called");
 
         if (id <= 0)
         {
@@ -50,13 +33,13 @@ public class GradeController : ControllerBase
             return BadRequest("Id must be a positive integer.");
         }
 
-        var item = await _reader.GetByIdAsync(id);
-        if (item == null)
+        var grade = await _gradeService.GetById(id);
+        if (grade == null)
         {
-            Console.WriteLine($"[LOG] Item {id} not found");
-            return NotFound($"Item with Id {id} was not found.");
+            Console.WriteLine($"[LOG] Grade {id} not found");
+            return NotFound($"Grade with Id {id} was not found.");
         }
 
-        return Ok(item);
+        return Ok(grade);
     }
 }
