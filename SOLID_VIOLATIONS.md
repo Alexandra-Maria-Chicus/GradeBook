@@ -28,7 +28,7 @@ The controller was talking directly to the repository, which meant any business 
 
 **File:** Program.cs
 
-IItemReader was never registered in the DI container. The controller depended on the interface but the app had no idea what implementation to inject, so it would crash on the first request with an unresolved dependency error.
+IGradeReader was never registered in the DI container. The controller depended on the interface but the app had no idea what implementation to inject, so it would crash on the first request with an unresolved dependency error.
 
 **Fix:** Registered IGradeReader with GradeRepository and IGradeService with GradeService in Program.cs.
 

@@ -24,7 +24,7 @@ public class GradeService :  IGradeService
     public async Task<IEnumerable<Grade>> GetTopN(int n)
     {
         var grades = await _reader.GetAllAsync();
-        var topGrades = grades.OrderByDescending(g => g.Value).Where(g => g.Value >= 5 && g.IsActive).Take(n);
+        var topGrades = grades.Where(g => g.Value >= 5).Take(n);
         return topGrades;
     }
 }

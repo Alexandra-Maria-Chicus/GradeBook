@@ -14,7 +14,7 @@ public class GradeRepository : IGradeReader
     }
     private async Task<List<Grade>> FetchGradesAsync()
     {
-        var response = await _httpClient.GetFromJsonAsync<GradeResponse>("https://gist.githubusercontent.com/ArdeleanTudor/8ea407832cd9794960e0e6bbd1319f6e/raw/.");
+        var response = await _httpClient.GetFromJsonAsync<GradeResponse>("https://gist.githubusercontent.com/ArdeleanTudor/8ea407832cd9794960e0e6bbd1319f6e/raw");
         return response?.Items ?? new List<Grade>();
     }
     public async Task<Grade?> GetByIdAsync(int id)

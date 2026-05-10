@@ -4,5 +4,5 @@ namespace Siemens.Internship2026.GradeBook.DTOs;
 
 public class GradeResponse
 {
-    public List<Grade> Items { get; set; }
+   public List<Grade> Items { get; set; } = new();
 }
